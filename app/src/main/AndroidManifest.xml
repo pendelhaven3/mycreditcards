@@ -24,6 +24,14 @@
             android:name=".CreditCardActivity"
             android:label="@string/title_activity_credit_card" >
         </activity>
+        <activity
+            android:name=".TransactionListActivity"
+            android:label="@string/title_activity_transaction_list" >
+        </activity>
+        <activity
+            android:name=".TransactionActivity"
+            android:label="@string/title_activity_transaction" >
+        </activity>
     </application>
 
 </manifest>

@@ -7,19 +7,15 @@ import android.content.DialogInterface;
 /**
  * Created by PJ on 8/24/2015.
  */
-public class ShowDialog {
+public class InfoDialog {
 
-    public static void info(Context context, String message) {
+    public static void show(Context context, String message, DialogInterface.OnClickListener onClick) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle("Info");
         alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", onClick);
         alertDialog.show();
     }
+
 
 }

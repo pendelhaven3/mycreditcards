@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteStatement;
 
 import com.pj.creditcardmanagement.model.CreditCard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by PJ on 8/24/2015.
  */
@@ -19,7 +22,7 @@ public class CreditCardDao {
     public static final String KEY_CARD_NUMBER = "cardNumber";
 
     public void save(CreditCard creditCard, Context context) {
-        CreditCardDbHelper dbHelper = new CreditCardDbHelper(context, null, 1);
+        DbHelper dbHelper = new DbHelper(context, null, 1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         SQLiteStatement stmt = db.compileStatement("INSERT INTO creditCard (name, bank, cardNumber) VALUES (?, ?, ?)");
         stmt.bindString(1, creditCard.getName());
@@ -30,11 +33,29 @@ public class CreditCardDao {
     }
 
     public Cursor getAll(Context context) {
-        CreditCardDbHelper dbHelper = new CreditCardDbHelper(context, null, 1);
+        DbHelper dbHelper = new DbHelper(context, null, 1);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return db.query(false, TABLE_NAME,
                 new String[] {KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
                 null, null, null, null, KEY_NAME, null);
+    }
+
+    public List<CreditCard> getAllCreditCards(Context context) {
+        List<CreditCard> creditCards = new ArrayList<>();
+
+        DbHelper dbHelper = new DbHelper(context, null, 1);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, TABLE_NAME,
+                new String[] {KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
+                null, null, null, null, KEY_NAME, null);
+        while (c.moveToNext()) {
+            CreditCard creditCard = new CreditCard();
+            creditCard.setId(c.getLong(0));
+            creditCard.setName(c.getString(1));
+            creditCards.add(creditCard);
+        }
+
+        return creditCards;
     }
 
 }

@@ -7,18 +7,24 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/goToCreditCardsButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Credit Cards"
-        />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/goToTransactionsButton"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/newTransactionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Transaction"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/transactionList"
         android:layout_height="wrap_content"
-        android:text="Transactions"
-        />
+        android:layout_width="match_parent">
+    </ListView>
 
 </LinearLayout>

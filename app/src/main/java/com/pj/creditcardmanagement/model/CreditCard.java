@@ -10,6 +10,15 @@ public class CreditCard {
     private String bank;
     private String number;
 
+    public CreditCard() {
+        // default constructor
+    }
+
+    public CreditCard(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,6 +49,11 @@ public class CreditCard {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

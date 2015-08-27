@@ -1,10 +1,7 @@
 package com.pj.creditcardmanagement.activity;
 
-import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -14,8 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.pj.creditcardmanagement.dao.CreditCardDao;
-import com.pj.creditcardmanagement.dao.CreditCardDbHelper;
-import com.pj.creditcardmanagement.gui.ShowDialog;
+import com.pj.creditcardmanagement.gui.InfoDialog;
 import com.pj.creditcardmanagement.model.CreditCard;
 
 public class CreditCardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -83,8 +79,12 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
 
         creditCardDao.save(creditCard, this);
 
-        ShowDialog.info(this, "Credit Card saved!");
-        goToCreditCardList();
+        InfoDialog.show(this, "Credit Card saved!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goToCreditCardList();
+            }
+        });
     }
 
     private void goToCreditCardList() {

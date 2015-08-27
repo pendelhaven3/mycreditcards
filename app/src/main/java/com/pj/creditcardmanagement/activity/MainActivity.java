@@ -13,14 +13,20 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button goToCreditCardsButton;
+    private Button goToTransactionsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        deleteDatabase("creditCardManagement");
+
         goToCreditCardsButton = (Button)findViewById(R.id.goToCreditCardsButton);
         goToCreditCardsButton.setOnClickListener(this);
+
+        goToTransactionsButton = (Button)findViewById(R.id.goToTransactionsButton);
+        goToTransactionsButton.setOnClickListener(this);
     }
 
     @Override
@@ -50,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.goToCreditCardsButton:
                 startActivity(new Intent(this, CreditCardListActivity.class));
+                break;
+            case R.id.goToTransactionsButton:
+                startActivity(new Intent(this, TransactionListActivity.class));
                 break;
         }
     }
