@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-public class TransactionActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class TransactionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button saveButton;
     private Spinner creditCardSpinner;
@@ -51,15 +51,13 @@ public class TransactionActivity extends AppCompatActivity implements View.OnCli
 
         saveButton = (Button)findViewById(R.id.saveTransactionButton);
         saveButton.setOnClickListener(this);
-
-        creditCardSpinner.setOnItemSelectedListener(this);
     }
 
     private void initializeCreditCardSpinner() {
         creditCardSpinner = (Spinner)findViewById(R.id.creditCardSpinner);
 
         List<CreditCard> creditCards = creditCardDao.getAllCreditCards(this);
-        creditCards.add(0, new CreditCard(0L, "Select one"));
+        creditCards.add(CreditCard.DUMMY);
 
         ArrayAdapter<CreditCard> adapter = new ArrayAdapter<>(this,
                 R.layout.support_simple_spinner_dropdown_item,
@@ -119,12 +117,4 @@ public class TransactionActivity extends AppCompatActivity implements View.OnCli
         startActivity(new Intent(this, TransactionListActivity.class));
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
 }

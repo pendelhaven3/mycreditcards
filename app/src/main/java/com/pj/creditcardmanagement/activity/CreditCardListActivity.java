@@ -6,6 +6,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.pj.creditcardmanagement.dao.CreditCardDao;
+import com.pj.creditcardmanagement.gui.CustomColors;
 
 
 public class CreditCardListActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -43,9 +45,9 @@ public class CreditCardListActivity extends AppCompatActivity implements View.On
     private void initializeCreditCardList() {
         creditCardListView = (ListView)findViewById(R.id.creditCardList);
 
-        LayoutInflater inflater = getLayoutInflater();
-        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.credit_card_list_header, creditCardListView, false);
-        creditCardListView.addHeaderView(header, null, false);
+//        LayoutInflater inflater = getLayoutInflater();
+//        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.credit_card_list_header, creditCardListView, false);
+//        creditCardListView.addHeaderView(header, null, false);
 
         adapter = new SimpleCursorAdapter(
                 this,
@@ -53,15 +55,25 @@ public class CreditCardListActivity extends AppCompatActivity implements View.On
                 null,
                 new String[] {
                         CreditCardDao.KEY_NAME,
-                        CreditCardDao.KEY_BANK,
-                        CreditCardDao.KEY_CARD_NUMBER
+                        CreditCardDao.KEY_BANK
                 },
                 new int[] {
                         R.id.creditCardRowName,
-                        R.id.creditCardRowBank,
-                        R.id.creditCardRowNumber
+                        R.id.creditCardRowBank
                 },
-                0);
+                0) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                if (position % 2 == 1) {
+                    view.setBackgroundColor(CustomColors.AQUA);
+                } else {
+                    view.setBackgroundColor(CustomColors.SOFT_BLUE);
+                }
+                return view;
+            }
+        };
         creditCardListView.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);

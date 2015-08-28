@@ -5,6 +5,8 @@ package com.pj.creditcardmanagement.model;
  */
 public class CreditCard {
 
+    public static final CreditCard DUMMY = new CreditCard(0L, "Select one");
+
     private Long id;
     private String name;
     private String bank;
