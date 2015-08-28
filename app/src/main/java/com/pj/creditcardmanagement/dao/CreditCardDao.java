@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import com.pj.creditcardmanagement.activity.CreditCardActivity;
 import com.pj.creditcardmanagement.model.CreditCard;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class CreditCardDao {
         DbHelper dbHelper = new DbHelper(context, null, 1);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(false, TABLE_NAME,
-                new String[] {KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
+                new String[]{KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
                 null, null, null, null, KEY_NAME, null);
         while (c.moveToNext()) {
             CreditCard creditCard = new CreditCard();
@@ -56,6 +57,46 @@ public class CreditCardDao {
         }
 
         return creditCards;
+    }
+
+    public CreditCard findByName(Context context, String name) {
+        DbHelper dbHelper = new DbHelper(context, null, 1);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, TABLE_NAME,
+                new String[]{KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
+                KEY_NAME + " = ?",
+                new String[]{name},
+                null, null, null, null);
+        if (c.moveToNext()) {
+            CreditCard creditCard = new CreditCard();
+            creditCard.setId(c.getLong(0));
+            creditCard.setName(c.getString(1));
+            return creditCard;
+        } else {
+            return null;
+        }
+    }
+
+    public CreditCard findByCardNumber(Context context, String cardNumber) {
+        DbHelper dbHelper = new DbHelper(context, null, 1);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(false, TABLE_NAME,
+                new String[]{KEY_ID + " as _id", KEY_NAME, KEY_BANK, KEY_CARD_NUMBER},
+                KEY_CARD_NUMBER + " = ?",
+                new String[]{cardNumber},
+                null, null, null, null);
+        if (c.moveToNext()) {
+            return mapRow(c);
+        } else {
+            return null;
+        }
+    }
+
+    private CreditCard mapRow(Cursor c) {
+        CreditCard creditCard = new CreditCard();
+        creditCard.setId(c.getLong(0));
+        creditCard.setName(c.getString(1));
+        return creditCard;
     }
 
 }

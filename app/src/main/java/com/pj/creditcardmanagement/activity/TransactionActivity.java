@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,7 @@ import android.widget.Spinner;
 
 import com.pj.creditcardmanagement.dao.CreditCardDao;
 import com.pj.creditcardmanagement.dao.TransactionDao;
-import com.pj.creditcardmanagement.gui.InfoDialog;
+import com.pj.creditcardmanagement.gui.ShowDialog;
 import com.pj.creditcardmanagement.model.CreditCard;
 import com.pj.creditcardmanagement.model.Transaction;
 
@@ -105,7 +104,7 @@ public class TransactionActivity extends AppCompatActivity implements View.OnCli
 
         transactionDao.save(transaction, this);
 
-        InfoDialog.show(this, "Transaction saved!", new DialogInterface.OnClickListener() {
+        ShowDialog.info(this, "Transaction saved!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 goToTransactionList();

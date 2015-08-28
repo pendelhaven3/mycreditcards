@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.pj.creditcardmanagement.dao.CreditCardDao;
-import com.pj.creditcardmanagement.gui.InfoDialog;
+import com.pj.creditcardmanagement.gui.ShowDialog;
 import com.pj.creditcardmanagement.model.CreditCard;
 
 public class CreditCardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,6 +27,7 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_card);
+        setTitle("Add Credit Card");
 
         initializeControls();
     }
@@ -72,19 +73,54 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void saveCreditCard() {
-        CreditCard creditCard = new CreditCard();
-        creditCard.setName(nameField.getText().toString());
-        creditCard.setBank(bankField.getText().toString());
-        creditCard.setNumber(cardNumberField.getText().toString());
+        if (validateCard()) {
+            CreditCard creditCard = new CreditCard();
+            creditCard.setName(nameField.getText().toString());
+            creditCard.setBank(bankField.getText().toString());
+            creditCard.setNumber(cardNumberField.getText().toString());
 
-        creditCardDao.save(creditCard, this);
+            creditCardDao.save(creditCard, this);
 
-        InfoDialog.show(this, "Credit Card saved!", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                goToCreditCardList();
-            }
-        });
+            ShowDialog.info(this, "Credit Card saved!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    goToCreditCardList();
+                }
+            });
+        }
+    }
+
+    private boolean validateCard() {
+        String cardName = nameField.getText().toString();
+        if (cardName.isEmpty()) {
+            ShowDialog.error(this, "Name must be specified");
+            return false;
+        }
+
+        if (isCardNameExisting(cardName)) {
+            ShowDialog.error(this, "Name is already used by an existing card");
+            return false;
+        }
+
+        if (bankField.getText().toString().isEmpty()) {
+            ShowDialog.error(this, "Bank must be specified");
+            return false;
+        }
+
+        if (isCardNumberExisting(cardName)) {
+            ShowDialog.error(this, "Card number is already used by an existing card");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isCardNumberExisting(String cardNumber) {
+        return creditCardDao.findByCardNumber(this, cardNumber) != null;
+    }
+
+    private boolean isCardNameExisting(String name) {
+        return creditCardDao.findByName(this, name) != null;
     }
 
     private void goToCreditCardList() {
