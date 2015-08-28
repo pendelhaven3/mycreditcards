@@ -20,6 +20,7 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     private EditText nameField;
     private EditText bankField;
     private EditText cardNumberField;
+    private CreditCard creditCard;
 
     private CreditCardDao creditCardDao = new CreditCardDao();
 
@@ -27,9 +28,30 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_card);
-        setTitle("Add Credit Card");
 
         initializeControls();
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
+        if (isCreditCardIdPassed()) {
+            setTitle("Edit Credit Card");
+            creditCard = creditCardDao.get(this, getPassedCreditCardId());
+            nameField.setText(creditCard.getName());
+            bankField.setText(creditCard.getBank());
+            cardNumberField.setText(creditCard.getCardNumber());
+        } else {
+            setTitle("Add Credit Card");
+            creditCard = new CreditCard();
+        }
+    }
+
+    private boolean isCreditCardIdPassed() {
+        return getPassedCreditCardId() != 0L;
+    }
+
+    private long getPassedCreditCardId() {
+        return getIntent().getLongExtra(CreditCardListActivity.CREDIT_CARD_ID, 0L);
     }
 
     private void initializeControls() {
@@ -73,13 +95,12 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void saveCreditCard() {
-        if (validateCard()) {
-            CreditCard creditCard = new CreditCard();
+        if (validateFields()) {
             creditCard.setName(nameField.getText().toString());
             creditCard.setBank(bankField.getText().toString());
-            creditCard.setNumber(cardNumberField.getText().toString());
+            creditCard.setCardNumber(cardNumberField.getText().toString());
 
-            creditCardDao.save(creditCard, this);
+            creditCardDao.save(this, creditCard);
 
             ShowDialog.info(this, "Credit Card saved!", new DialogInterface.OnClickListener() {
                 @Override
@@ -90,7 +111,7 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private boolean validateCard() {
+    private boolean validateFields() {
         String cardName = nameField.getText().toString();
         if (cardName.isEmpty()) {
             ShowDialog.error(this, "Name must be specified");
@@ -116,11 +137,19 @@ public class CreditCardActivity extends AppCompatActivity implements View.OnClic
     }
 
     private boolean isCardNumberExisting(String cardNumber) {
-        return creditCardDao.findByCardNumber(this, cardNumber) != null;
+        if (creditCard.isNew()) {
+            return creditCardDao.findByCardNumber(this, cardNumber) != null;
+        } else {
+            return !cardNumber.equals(creditCard.getCardNumber()) && creditCardDao.findByCardNumber(this, cardNumber) != null;
+        }
     }
 
     private boolean isCardNameExisting(String name) {
-        return creditCardDao.findByName(this, name) != null;
+        if (creditCard.isNew()) {
+            return creditCardDao.findByName(this, name) != null;
+        } else {
+            return !name.equals(creditCard.getName()) && creditCardDao.findByName(this, name) != null;
+        }
     }
 
     private void goToCreditCardList() {

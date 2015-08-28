@@ -45,11 +45,11 @@ public class CreditCard {
         this.bank = bank;
     }
 
-    public String getNumber() {
+    public String getCardNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setCardNumber(String number) {
         this.number = number;
     }
 
@@ -58,4 +58,7 @@ public class CreditCard {
         return name;
     }
 
+    public boolean isNew() {
+        return id == null;
+    }
 }

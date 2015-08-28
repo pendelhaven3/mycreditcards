@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -23,7 +24,10 @@ import com.pj.creditcardmanagement.dao.CreditCardDao;
 import com.pj.creditcardmanagement.gui.CustomColors;
 
 
-public class CreditCardListActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CreditCardListActivity extends AppCompatActivity
+        implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+
+    public static final String CREDIT_CARD_ID = "com.pj.creditcardmanagement.activity.CREDIT_CARD_ID";
 
     private ListView creditCardListView;
     private Button newCreditCardButton;
@@ -44,10 +48,6 @@ public class CreditCardListActivity extends AppCompatActivity implements View.On
 
     private void initializeCreditCardList() {
         creditCardListView = (ListView)findViewById(R.id.creditCardList);
-
-//        LayoutInflater inflater = getLayoutInflater();
-//        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.credit_card_list_header, creditCardListView, false);
-//        creditCardListView.addHeaderView(header, null, false);
 
         adapter = new SimpleCursorAdapter(
                 this,
@@ -77,6 +77,8 @@ public class CreditCardListActivity extends AppCompatActivity implements View.On
         creditCardListView.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
+
+        creditCardListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -130,6 +132,15 @@ public class CreditCardListActivity extends AppCompatActivity implements View.On
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (id != 0L) {
+            Intent intent = new Intent(this, CreditCardActivity.class);
+            intent.putExtra(CREDIT_CARD_ID, id);
+            startActivity(intent);
+        }
     }
 
 }
